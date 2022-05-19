@@ -12,7 +12,9 @@ export const createRoom = async (req, res, next) => {
         $push: { rooms: savedRoom._id }, //method update cua mongo
       });
     } catch (error) {
-      res.status(401).json("Something wrong with creating data, please try again")
+      res
+        .status(401)
+        .json("Something wrong with creating data, please try again");
     }
     res.status(200).json(savedRoom);
   } catch (error) {
@@ -33,23 +35,33 @@ export const updateRoom = async (req, res, next) => {
   } catch (error) {
     res.status(500).json("Something wrong with editing data");
   }
-}
+};
 export const deleteRoom = async (req, res, next) => {
+  const hotelId = req.params.hotelid;
   try {
     await Rooms.findByIdAndDelete(req.params.id);
-    res.status(200).json("Successfully deleted the data..");
+    try {
+      await Hotels.findByIdAndUpdate(hotelId, {
+        $pull: { rooms: req.params.id }, //method update cua mongo
+      });
+    } catch (error) {
+      res
+        .status(401)
+        .json("Something wrong with deleting data, please try again");
+    }
+    res.status(200).json("Successfully deleted the room..");
   } catch (error) {
     res.status(500).json("Something wrong with deleting data");
   }
-}
+};
 export const getRoom = async (req, res, next) => {
   try {
-    const rooms = await Rooms.findById(req.params.id);
-    res.status(200).json(rooms);
+    const room = await Rooms.findById(req.params.id);
+    res.status(200).json(room);
   } catch (error) {
     res.status(500).json("Cannot find any datas of the room");
   }
-}
+};
 export const getAllRoom = async (req, res, next) => {
   try {
     const rooms = await Rooms.find();
@@ -57,4 +69,4 @@ export const getAllRoom = async (req, res, next) => {
   } catch (error) {
     res.status(500).json("Cannot find any datas");
   }
-}
+};
