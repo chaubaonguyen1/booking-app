@@ -25,7 +25,7 @@
   cursor: pointer;
   border: none;
 }
-input:focus {
+.emailInput:focus {
   border: none;
   outline: none;
 }

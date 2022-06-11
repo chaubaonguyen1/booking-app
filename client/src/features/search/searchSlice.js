@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   city: undefined,
-  dates: [],
+  dates: JSON.parse(localStorage.getItem("dates")) || [],
   options: {
     adult: undefined,
     children: undefined,

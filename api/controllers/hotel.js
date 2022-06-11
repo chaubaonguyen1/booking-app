@@ -1,4 +1,5 @@
 import Hotels from "../models/Hotels.js";
+import Rooms from "../models/Rooms.js";
 
 export const createHotel = async (req, res, next) => {
   const newHotel = new Hotels(req.body);
@@ -83,7 +84,7 @@ export const getAllHotel = async (req, res, next) => {
   try {
     const hotels = await Hotels.find({
       ...others,
-      cheapestPrice: { $gt: min | 1, $lt: max  || 999},
+      cheapestPrice: { $gt: min | 1, $lt: max || 999 },
     }).limit(req.query.limit);
     //xu ly query cheapest price + maximum price
     res.status(200).json(hotels);
@@ -91,3 +92,22 @@ export const getAllHotel = async (req, res, next) => {
     res.status(500).json("Cannot find any datas");
   }
 };
+
+export const getHotelRooms = async (req, res, next) => {
+  try {
+    const hotel = await Hotels.findById(req.params.id);
+    console.log('Log hotel', hotel)
+    const list = await Promise.all(
+      hotel.rooms.map((room) => {
+        return Rooms.findById(room);
+      })
+    );
+    console.log('Log list',list);
+    res.status(200).json(list);
+  } catch (error) {
+    res
+      .status(404)
+      .json("Something wrong with getHotelRooms controller, please try again");
+  }
+};
+//2:31:30

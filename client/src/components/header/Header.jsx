@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { useSelector, useDispatch } from 'react-redux';
-import { DATE, DESTINATION, OPTIONS, RESET_SEARCH } from "../../features/search/searchSlice";
+import { DATE, DESTINATION, OPTIONS } from "../../features/search/searchSlice";
 
 export default function Header({ type }) {
   const [destination, setDestination] = useState("");
@@ -27,13 +27,15 @@ export default function Header({ type }) {
       key: "selection",
     },
   ]);
+  console.log(dates)
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
     children: 0,
     room: 1,
   });
-  const search = useSelector((state) => state.search);
+  const user = useSelector((state) => state.auth.user);
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -49,8 +51,12 @@ export default function Header({ type }) {
   };
   const handleSearch = () => {
     dispatch(OPTIONS(options));
-    dispatch(DATE(dates));
+    dispatch(DATE(dates));  
     dispatch(DESTINATION(destination));
+    localStorage.setItem("rooms", options.room);
+    localStorage.setItem("dates", JSON.stringify({dates}));
+    //localStorage.setItem("endDate", dates[0].endDate);
+    //localStorage.setItem("startDate", dates[0].startDate);
     navigate("/hotels", {state: {
       destination,
       dates,
@@ -92,7 +98,7 @@ export default function Header({ type }) {
               Get rewarded for your travels – unlock instant savings of 10% or
               more with a free booking account
             </p>
-            <button className="headerBtn">Sign in / Register</button>
+            {!user && (<button className="headerBtn">Sign in / Register</button>)}
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />

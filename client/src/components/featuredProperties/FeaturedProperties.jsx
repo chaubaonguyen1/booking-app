@@ -2,8 +2,8 @@ import useFetch from "../../hooks/useFetch";
 import "./featuredproperties.css";
 
 export default function FeaturedProperties() {
-  const { data, loading, error, reFetch } = useFetch(
-    "/hotels/getAllHotel?featured=true&limit=4"
+  const { data, loading } = useFetch(
+    "/hotels/getAllHotel?featured=true&limit=6"
   );
   return (
     <div className="featuredProperties">
